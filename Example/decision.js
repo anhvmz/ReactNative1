@@ -14,12 +14,12 @@ function countTrue(array) {
 
 const decide = (history = []) => {
   const rate = countTrue(history) / history.length;
-  return rate >= 0.5 ? true : false;
+  return rate >= 0.5 ? Math.random() < 0.5 ? true : false : false;
 }
-var data = [
-  { yours: true, theirs: true },
-  { yours: true, theirs: false },
-  { yours: true, theirs: false },
-]
-console.log(decide(data));
+// var data = [
+//   { yours: true, theirs: true },
+//   { yours: true, theirs: false },
+//   { yours: true, theirs: true },
+// ]
+// console.log(decide(data));
 module.exports = decide;
