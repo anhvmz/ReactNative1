@@ -3,8 +3,23 @@
 //   { yours: true, theirs: true },
 //   { yours: true, theirs: false },
 // ]
-const decide = (history = []) => {
-  return false; // Your code here
+
+function countTrue(array) {
+  var count = array.reduce((currentCount, number) => {
+    number.theirs ? currentCount++ : {};
+    return currentCount;
+  }, 0);
+  return count;
 }
 
+const decide = (history = []) => {
+  const rate = countTrue(history) / history.length;
+  return rate >= 0.5 ? true : false;
+}
+var data = [
+  { yours: true, theirs: true },
+  { yours: true, theirs: false },
+  { yours: true, theirs: false },
+]
+console.log(decide(data));
 module.exports = decide;
