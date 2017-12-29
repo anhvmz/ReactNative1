@@ -25,12 +25,12 @@ function checkMe(history) {
   const myRate = countMeTrue(history) / history.length;
   return myRate >= 0.5 ? false : Math.random() < 0.5 ? true : false;
 }
-function checkTheirs() {
+function checkTheirs(history) {
   return countMeTrue(history) / history.length >= 0.5 ? false : true;
 }
 const decide = (history = []) => {
   const rate = countTheirsTrue(history) / history.length;
-  return rate > 0.5 ? checkMe(history) : checkTheirs();
+  return rate > 0.5 ? checkMe(history) : checkTheirs(history);
 }
 // var data = [
 //   { yours: true, theirs: true },
