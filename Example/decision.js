@@ -30,8 +30,8 @@ function checkTheirs(history) {
 }
 const decide = (history = []) => {
   const rate = countTheirsTrue(history) / history.length;
-  // return rate > 0.5 ? checkMe(history) : checkTheirs(history);
-  return rate > 0.5 ? true : false;
+  return rate > 0.5 ? checkMe(history) : checkTheirs(history);
+  // return rate > 0.5 ? true : false;
 }
 // var data = [
 //   { yours: true, theirs: true },
