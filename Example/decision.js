@@ -23,7 +23,7 @@ function countMeTrue(array) {
 function checkMe(history) {
   //return Math.random() < 0.5 ? true : false;
   const myRate = countMeTrue(history) / history.length;
-  return myRate >= 0.5 ? false : true;
+  return myRate < 0.5 ? false : Math.random() < 0.5 ? true : false;
 }
 const decide = (history = []) => {
   const rate = countTheirsTrue(history) / history.length;
