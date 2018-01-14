@@ -11,9 +11,8 @@ class GameOver extends Component {
   render() {
     return (
       <View>
-        <Text>Game Over</Text>
         <Text>{this.props.score}</Text>
-        <Button onPress={this.props._updateGamePlay} title="Try again!" />
+        <Button onPress={this.props.onRetry} title="Retry" />
       </View>
     );
   }
