@@ -7,37 +7,52 @@ import {
 } from 'react-native';
 
 import { Provider, connect } from 'react-redux';
-import { createStore } from 'redux';
-
-import ConvertScreen from './containers/ConvertScreen';
-import CategoryScreen from './containers/CategoryScreen';
+import { createStore, applyMiddleware } from 'redux';
 
 import reducers from './reducers/';
+import { AppNavigation } from './AppNavigation';
+import { parse } from 'path-to-regexp';
+import { AsyncStorage } from 'react-native';
 
-const store = createStore(reducers);
+const persisData = store => next => action => {
+  next(action);
+  asyncSaveAppState(store.getState());
+}
 
-const page = {
-  CATEGORY: "CATEGORY",
-  CONVERT: "CONVERT"
+const asyncSaveAppState = async ({ baseValue, category, unitLeft, unitRight }) => {
+  try {
+    await AsyncStorage.setItem("@appState", JSON.stringify({ baseValue, category, unitLeft, unitRight }));
+  }
+  catch (err) {
+    console.error(err);
+  }
 }
 
 class App extends PureComponent {
   state = {
-    currentPage: page.CONVERT
+    isLoading: true,
+  }
+  componentDidMount() {
+    this._loadBaseValue();
   }
 
-  _goToCategoryScreen = () => this.setState({ currentPage: page.CATEGORY })
-  _goToConvertScreen = () => this.setState({ currentPage: page.CONVERT })
-
+  _loadBaseValue = async () => {
+    const savedState = await AsyncStorage.getItem("@appState");
+    this.setState({
+      isLoading: false,
+      store: createStore(
+        reducers,
+        JSON.parse(savedState) || {},
+        applyMiddleware(persisData))
+    });
+  }
   render() {
     return (
-      <Provider store={store}>
-        {
-          this.state.currentPage === page.CONVERT
-            ? <ConvertScreen toggleScreen={this._goToCategoryScreen} />
-            : <CategoryScreen toggleScreen={this._goToConvertScreen} />
-        }
-      </Provider>
+      this.state.isLoading
+        ? (<Text> Loading... </Text>)
+        : (<Provider store={this.state.store}>
+          <AppNavigation />
+        </Provider>)
     );
   }
 }

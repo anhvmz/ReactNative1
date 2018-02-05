@@ -14,9 +14,13 @@ import { connect } from 'react-redux';
 import { changeCategoryIdAction } from '../actions/changeCategoryIdAction';
 
 class CategoryScreen extends PureComponent {
+  static navigationOptions = ({navigation}) => ({
+    title: "CategoriesScreen"
+  });
+  
   state = {
     color: "white",
-  }
+  };
   _onChangeCategoryId = id => {
     this.props.changeCategoryId(id);
   };
@@ -28,12 +32,15 @@ class CategoryScreen extends PureComponent {
     item={{ title: item.name, id: item.id }}
     isEven={index % 2 === 0}
     isSelected={item.id === this.props.category}
-  />)
+  />);
 
+  componentDidUpdate() {
+    this.props.navigation.goBack();
+  }
+  
   render() {
     return (
-      <View style={{ flex: 1, paddingTop: 20 }}>
-        <Button title="Toggle Screen" onPress={this.props.toggleScreen} />
+      <View style={{ flex: 1}}>
         <FlatList
           style={[globalStyles.bgPrimary3, { flex: 1 }]}
           data={categories}

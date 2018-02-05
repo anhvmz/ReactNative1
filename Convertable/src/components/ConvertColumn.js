@@ -8,7 +8,7 @@ import {
 
 import { connect } from 'react-redux';
 
-import { createBaseValueAction } from '../actions/';
+import { createBaseValueAction, changeUnitLeftAction, changeUnitRightAction } from '../actions/';
 
 import globalStyles from '../Styles';
 
@@ -17,12 +17,17 @@ import UnitList from './UnitList';
 
 class ConvertColumn extends PureComponent {
   state = {
-    currentUnitId: 0
   }
 
-  _onChangeUnitId = (id) => this.setState({ currentUnitId: id });
+  // _onChangeUnitId = (id) => this.setState({ currentUnitId: id });
+  _onChangeUnitId = (id) => {
+    this.props.columnID === "1"
+      ? this.props.changeUnitLeft(id)
+      : this.props.changeUnitRight(id)
+  };
 
   _onChangeText = (text) => {
+    const currentUnitId = this.props.columnID === "1" ? this.props.unitLeft : this.props.unitRight;
     const currentItem = this.props.items.filter(
       item => item.id === this.state.currentUnitId
     )[0];
@@ -33,10 +38,10 @@ class ConvertColumn extends PureComponent {
   }
 
   render() {
+    const currentUnitId = this.props.columnID === "1" ? this.props.unitLeft : this.props.unitRight;
     const currentItem = this.props.items.filter(
-      item => item.id === this.state.currentUnitId
+      item => item.id === currentUnitId
     )[0];
-
     return (
       <View style={[styles.column]}>
         <UnitDisplay
@@ -46,7 +51,7 @@ class ConvertColumn extends PureComponent {
         />
         <UnitList
           items={this.props.items}
-          selectedId={this.state.currentUnitId}
+          selectedId={currentUnitId}
           onChangeUnitId={this._onChangeUnitId}
         />
       </View>
@@ -61,11 +66,15 @@ const styles = StyleSheet.create({
 });
 
 const mapAppStateToProps = state => ({
-  baseValue: state.baseValue
+  baseValue: state.baseValue,
+  unitLeft: state.unitLeft,
+  unitRight: state.unitRight
 });
 
 const mapDispatchToProps = dispatch => ({
-  changeBaseValue: newValue => dispatch(createBaseValueAction(newValue))
+  changeBaseValue: newValue => dispatch(createBaseValueAction(newValue)),
+  changeUnitLeft: newValue => dispatch(changeUnitLeftAction(newValue)),
+  changeUnitRight: newValue => dispatch(changeUnitRightAction(newValue))
 });
 
 export default connect(mapAppStateToProps, mapDispatchToProps)(ConvertColumn);

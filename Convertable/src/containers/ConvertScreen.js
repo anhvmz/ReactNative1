@@ -16,20 +16,39 @@ import { categories } from '../database.json';
 import { connect } from 'react-redux';
 
 class ConvertScreen extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.state.params ? navigation.state.params.title : "",
+    headerRight: (
+      <Button title="Categories" onPress={() => navigation.navigate("CategoryScreen")} />
+    )
+  })
   state = {
-    items: categories[this.props.category].items
   }
 
+  // componentDidMount() {
+  //   this.props.navigation.setParams({
+  //     title: categories[this.props.category].name
+  //   });
+  // };
+
+  componentWillReceiveProps(nextProps) {
+    if (categories[nextProps.category].name !== categories[this.props.category].name) {
+      this.props.navigation.setParams({
+        title: categories[nextProps.category].name
+      });
+    }
+  }
   render() {
     return (
-      <View style={{ flex: 1, paddingTop: 20 }}>
-        <Button title="Toggle Screen" onPress={this.props.toggleScreen} />
+      <View style={{ flex: 1 }}>
         <View style={[globalStyles.bgPrimary3, globalStyles.container, styles.appContainer]}>
           <ConvertColumn
-            items={this.state.items}
+            items={categories[this.props.category].items}
+            columnID="1"
           />
           <ConvertColumn
-            items={this.state.items}
+            items={categories[this.props.category].items}
+            columnID="2"
           />
         </View>
       </View>
@@ -48,4 +67,4 @@ const mapAppStateToProps = state => ({
   category: state.category
 });
 
-export default connect(mapAppStateToProps) (ConvertScreen);
+export default connect(mapAppStateToProps)(ConvertScreen);
